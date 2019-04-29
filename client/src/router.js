@@ -2,10 +2,12 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
 import Login from './views/Login.vue'
+import Logout from './views/Logout.vue'
+import store from './store'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
@@ -20,6 +22,11 @@ export default new Router({
       component: Login
     },
     {
+      path: '/logout',
+      name: 'logout',
+      component: Logout
+    },
+    {
       path: '/about',
       name: 'about',
       // route level code-splitting
@@ -29,3 +36,20 @@ export default new Router({
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  if ((to.path === '/login') || (to.path === '/logout')) {
+    next()
+  } else {
+    if (store.getters.isAuthenticated) {
+      next()
+    } else {
+      next({
+        path: '/login',
+        query: { redirect: to.fullPath }
+      })
+    }
+  }
+})
+
+export default router
