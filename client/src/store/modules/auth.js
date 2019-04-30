@@ -1,5 +1,5 @@
 import { AUTH_REQUEST, AUTH_ERROR, AUTH_SUCCESS, AUTH_LOGOUT } from '../actions/auth'
-import apiCall from '../../tools/api'
+import hash from 'hash.js'
 
 const state = {
   token: localStorage.getItem('user-token') || '',
@@ -16,7 +16,11 @@ const actions = {
   [AUTH_REQUEST]: ({ commit, dispatch }, user) => {
     return new Promise((resolve, reject) => {
       commit(AUTH_REQUEST)
-      apiCall({ url: 'auth', data: user, method: 'POST' })
+      this.$http.get('login', {
+        headers: {
+          Authorization: user.username + ':' + hash.sha256().update(user.password).digest('hex')
+        }
+      })
         .then(resp => {
           localStorage.setItem('user-token', resp.token)
           commit(AUTH_SUCCESS, resp)

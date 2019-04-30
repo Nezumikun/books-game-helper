@@ -17,7 +17,11 @@ export default {
   name: 'login',
   methods: {
     login: function () {
+      console.log(this)
       const { username, password } = this
+      if ((username === '') || (password === '')) {
+        return
+      }
       this.$store.dispatch(AUTH_REQUEST, { username, password }).then(() => {
         this.$router.push('/')
       })
