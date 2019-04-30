@@ -1,8 +1,10 @@
 import { AUTH_REQUEST, AUTH_ERROR, AUTH_SUCCESS, AUTH_LOGOUT } from '../actions/auth'
 import hash from 'hash.js'
 
+const tokenNameInStorage = 'bgh-user-token'
+
 const state = {
-  token: localStorage.getItem('user-token') || '',
+  token: localStorage.getItem(tokenNameInStorage) || '',
   status: '',
   hasLoadedOnce: false
 }
@@ -22,14 +24,14 @@ const actions = {
         }
       })
         .then(resp => {
-          localStorage.setItem('user-token', resp.token)
+          localStorage.setItem(tokenNameInStorage, resp.token)
           commit(AUTH_SUCCESS, resp)
           // dispatch(USER_REQUEST)
           resolve(resp)
         })
         .catch(err => {
           commit(AUTH_ERROR, err)
-          localStorage.removeItem('user-token')
+          localStorage.removeItem(tokenNameInStorage)
           reject(err)
         })
     })
@@ -37,7 +39,7 @@ const actions = {
   [AUTH_LOGOUT]: ({ commit, dispatch }) => {
     return new Promise((resolve, reject) => {
       commit(AUTH_LOGOUT)
-      localStorage.removeItem('user-token')
+      localStorage.removeItem(tokenNameInStorage)
       resolve()
     })
   }
