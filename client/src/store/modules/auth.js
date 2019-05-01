@@ -1,11 +1,13 @@
 import { AUTH_REQUEST, AUTH_ERROR, AUTH_SUCCESS, AUTH_LOGOUT } from '../actions/auth'
 import hash from 'hash.js'
+import apiCall from '../../tools/api'
 
 const tokenNameInStorage = 'bgh-user-token'
 
 const state = {
   token: localStorage.getItem(tokenNameInStorage) || '',
   status: '',
+  user: {},
   hasLoadedOnce: false
 }
 
@@ -18,14 +20,15 @@ const actions = {
   [AUTH_REQUEST]: ({ commit, dispatch }, user) => {
     return new Promise((resolve, reject) => {
       commit(AUTH_REQUEST)
-      this.$http.get('login', {
+      apiCall('./login', 'get', {}, {
         headers: {
           Authorization: user.username + ':' + hash.sha256().update(user.password).digest('hex')
         }
       })
         .then(resp => {
-          localStorage.setItem(tokenNameInStorage, resp.token)
-          commit(AUTH_SUCCESS, resp)
+          console.log(resp)
+          localStorage.setItem(tokenNameInStorage, resp.data.token)
+          commit(AUTH_SUCCESS, resp.data)
           // dispatch(USER_REQUEST)
           resolve(resp)
         })
@@ -52,6 +55,7 @@ const mutations = {
   [AUTH_SUCCESS]: (state, resp) => {
     state.status = 'success'
     state.token = resp.token
+    state.user = resp.user
     state.hasLoadedOnce = true
   },
   [AUTH_ERROR]: (state) => {
@@ -60,6 +64,7 @@ const mutations = {
   },
   [AUTH_LOGOUT]: (state) => {
     state.token = ''
+    state.user = {}
   }
 }
 

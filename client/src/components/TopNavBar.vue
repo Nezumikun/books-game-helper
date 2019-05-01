@@ -1,32 +1,53 @@
-<template lang="pug">
-  div(v-show="this.$store.getters.isAuthenticated")
-    b-navbar(toggleable="lg" type="dark" variant="secondary" fixed="top")
-      b-navbar-brand(to="/") NavBar
-
-      b-navbar-toggle(target="nav-collapse")
-
-      b-collapse(id="nav-collapse" is-nav)
-        b-navbar-nav
-          b-nav-item(to="/about") About
-          b-nav-item(to="/login" v-show="!this.$store.getters.isAuthenticated") Login
-          b-nav-item(to="/logout" v-show="this.$store.getters.isAuthenticated") Logout
-
-        // Right aligned nav items
-        b-navbar-nav(class="ml-auto")
-          b-nav-form
-            b-form-input(size="sm" class="mr-sm-2" placeholder="Search")
-            b-button(size="sm" class="my-2 my-sm-0" type="submit") Search
-
-          b-nav-item-dropdown(text="Lang" right)
-            b-dropdown-item(href="#") EN
-            b-dropdown-item(href="#") ES
-            b-dropdown-item(href="#") RU
-            b-dropdown-item(href="#") FA
-
-          b-nav-item-dropdown(right)
-            // Using 'button-content' slot
-            template(slot="button-content")
-              em User
-            b-dropdown-item(href="#") Profile
-            b-dropdown-item(href="#") Sign Out
+<template>
+  <div>
+    <v-navigation-drawer
+      v-model="drawer"
+      app
+      clipped
+      absolute
+      overflow
+    >
+      <v-list dense>
+        <v-list-tile>
+          <v-list-tile-action>
+            <v-icon>home</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>Home</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile @click="logout">
+          <v-list-tile-action>
+            <v-icon>exit_to_app</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>Выход</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+      </v-list>
+    </v-navigation-drawer>
+    <v-toolbar clipped-left="true" color="indigo" dark app absolute>
+      <v-toolbar-side-icon
+        v-if="this.$store.getters.isAuthenticated"
+        @click.stop="drawer = !drawer"
+      ></v-toolbar-side-icon>
+      <v-toolbar-title>Книгоигры</v-toolbar-title>
+    </v-toolbar>
+  </div>
 </template>
+
+<script>
+export default {
+  data () {
+    return {
+      drawer: false
+    }
+  },
+  methods: {
+    logout () {
+      this.drawer = false
+      this.$router.push('/logout')
+    }
+  }
+}
+</script>

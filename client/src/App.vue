@@ -1,7 +1,9 @@
 <template>
   <div id="app">
-    <TopNavBar />
-    <router-view/>
+    <v-app id="inspire">
+      <TopNavBar />
+      <router-view/>
+    </v-app>
   </div>
 </template>
 
