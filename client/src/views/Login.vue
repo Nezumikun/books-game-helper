@@ -37,13 +37,18 @@ export default {
   name: 'login',
   methods: {
     login: function () {
-      console.log(this)
       if ((this.username === '') || (this.password === '')) {
         return
       }
-      this.$store.dispatch(AUTH_REQUEST, { username: this.username, password: this.password }).then(() => {
-        this.$router.push('/')
-      })
+      this.$store.dispatch(AUTH_REQUEST, { username: this.username, password: this.password })
+        .then(() => {
+          let temp = {
+            text: `Добро пожаловать, ${this.$store.state.auth.user.description}!`
+          }
+          this.$emit('alert-show', temp)
+          console.log('emit', temp)
+          this.$router.push('/')
+        })
     }
   },
   components: {

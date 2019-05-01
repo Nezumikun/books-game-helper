@@ -26,7 +26,7 @@
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
-    <v-toolbar clipped-left="true" color="indigo" dark app absolute>
+    <v-toolbar clipped-left color="indigo" dark app absolute>
       <v-toolbar-side-icon
         v-if="this.$store.getters.isAuthenticated"
         @click.stop="drawer = !drawer"

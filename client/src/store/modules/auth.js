@@ -26,7 +26,6 @@ const actions = {
         }
       })
         .then(resp => {
-          console.log(resp)
           localStorage.setItem(tokenNameInStorage, resp.data.token)
           commit(AUTH_SUCCESS, resp.data)
           // dispatch(USER_REQUEST)
