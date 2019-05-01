@@ -1,12 +1,12 @@
 <template>
   <div id="app"
-    @alert-show='show'
   >
     <v-app id="inspire">
       <TopNavBar />
-      <router-view/>
-      <Alert
+      <router-view
+        @alert-show='show'
       />
+      <Alert ref="alert"/>
     </v-app>
   </div>
 </template>
@@ -22,7 +22,13 @@ export default {
   methods: {
     show: function (data) {
       console.log('show', data)
+      this.$refs.alert.show(data)
     }
+  },
+  created () {
+    this.$nextTick(function () {
+      this.$refs.alert.show({ text: 'Test!' })
+    })
   }
 }
 </script>

@@ -3,16 +3,16 @@
         v-model="snackbar"
         bottom
         right
+        :color="color"
         :timeout="timeout"
       >
         {{ text }}
-        <v-btn
+        <v-icon
           color="pink"
-          flat
           @click="snackbar = false"
         >
-          Close
-        </v-btn>
+          mdi-close
+        </v-icon>
   </v-snackbar>
 </template>
 
