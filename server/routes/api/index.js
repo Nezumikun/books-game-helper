@@ -76,7 +76,7 @@ router.get('/login', function(req, res, next) {
       }
       let query = { login: temp[0], passwordHash: temp[1] }
       debug(query)
-      User.find(query).exec((err, doc) => {
+      User.find(query, '-passwordHash').exec((err, doc) => {
         debug(err, doc)
         if (err) {
           res.status(500).send(err)
@@ -96,7 +96,6 @@ router.get('/login', function(req, res, next) {
           user: doc[0].toObject()
         }
         delete retVal.user._id
-        delete retVal.user.passwordHash
         res.send(retVal)
         res.end()
       })
