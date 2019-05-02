@@ -70,7 +70,7 @@ router.get('/login', function(req, res, next) {
     if (_.has(req.headers, 'authorization')) {
       let temp = req.headers.authorization.split(':', 2)
       if (temp.length !== 2) {
-        res.sendStatus(500)
+        res.sendStatus(500).send(new Error('Отсутствуют данные для проверки'))
         res.end()
         return
       }
@@ -79,12 +79,15 @@ router.get('/login', function(req, res, next) {
       User.find(query).exec((err, doc) => {
         debug(err, doc)
         if (err) {
-          res.sendStatus(500)
+          res.status(500).send(err)
           res.end()
           return
         }
         if (doc.length === 0) {
-          res.sendStatus(401)
+          res.status(401)
+          res.send({
+            message: 'Неверный логин или пароль'
+          })
           res.end()
           return
         }
@@ -126,7 +129,7 @@ router.get('/login', function(req, res, next) {
     */
   }
   else {
-    res.sendStatus(500)
+    res.status(500).send(new Error('Отсутствует подключение к БД'))
     res.end()
   }
 })

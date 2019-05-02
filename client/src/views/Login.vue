@@ -42,13 +42,18 @@ export default {
       }
       this.$store.dispatch(AUTH_REQUEST, { username: this.username, password: this.password })
         .then(() => {
-          let temp = {
+          this.$emit('alert-show', {
             text: `Добро пожаловать, ${this.$store.state.auth.user.description}!`,
             color: 'success'
-          }
-          this.$emit('alert-show', temp)
-          console.log('emit', temp)
+          })
           this.$router.push('/')
+        })
+        .catch((err) => {
+          console.log(err)
+          this.$emit('alert-show', {
+            text: `Ошибка ${err.status}: ${err.data.message}!`,
+            color: 'error'
+          })
         })
       return false
     }

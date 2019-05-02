@@ -34,7 +34,7 @@ const actions = {
         .catch(err => {
           commit(AUTH_ERROR, err)
           localStorage.removeItem(tokenNameInStorage)
-          reject(err)
+          reject(err.response)
         })
     })
   },
