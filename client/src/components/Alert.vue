@@ -5,14 +5,17 @@
         right
         :color="color"
         :timeout="timeout"
-      >
-        {{ text }}
-        <v-icon
-          color="pink"
-          @click="snackbar = false"
-        >
-          mdi-close
-        </v-icon>
+  >
+    {{ text }}
+    <v-btn
+      dark
+      flat
+      @click="snackbar = false"
+    >
+      <v-icon>
+        close
+      </v-icon>
+    </v-btn>
   </v-snackbar>
 </template>
 
