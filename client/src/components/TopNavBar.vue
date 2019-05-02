@@ -8,7 +8,7 @@
       overflow
     >
       <v-list dense>
-        <v-list-tile>
+        <v-list-tile @click="close" to="/">
           <v-list-tile-action>
             <v-icon>home</v-icon>
           </v-list-tile-action>
@@ -16,7 +16,7 @@
             <v-list-tile-title>Home</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        <v-list-tile @click="logout">
+        <v-list-tile @click="close" to="/logout">
           <v-list-tile-action>
             <v-icon>exit_to_app</v-icon>
           </v-list-tile-action>
@@ -44,9 +44,8 @@ export default {
     }
   },
   methods: {
-    logout () {
+    close () {
       this.drawer = false
-      this.$router.push('/logout')
     }
   }
 }
