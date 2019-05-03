@@ -2,42 +2,19 @@
   <div>
     <v-navigation-drawer
       v-model="drawer"
+      v-if="this.$store.getters.isAuthenticated"
       app
       clipped
       absolute
       overflow
     >
       <v-list dense>
-        <v-list-tile @click="close" to="/">
+        <v-list-tile v-for="item in menu_items" :key="item.route" @click="close" :to="'/' + item.route">
           <v-list-tile-action>
-            <v-icon>home</v-icon>
+            <v-icon>{{ item.icon }}</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title>Home</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-        <v-list-tile @click="close" to="/users">
-          <v-list-tile-action>
-            <v-icon>people</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Пользователи</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-        <v-list-tile @click="close" to="/games">
-          <v-list-tile-action>
-            <v-icon>casino</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Игры</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-        <v-list-tile @click="close" to="/logout">
-          <v-list-tile-action>
-            <v-icon>exit_to_app</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Выход</v-list-tile-title>
+            <v-list-tile-title>{{ item.title }}</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
@@ -56,12 +33,39 @@
 export default {
   data () {
     return {
-      drawer: false
+      drawer: true,
+      menu_items: [
+        {
+          icon: 'home',
+          route: 'home',
+          title: 'Начало'
+        },
+        {
+          icon: 'people',
+          route: 'users',
+          title: 'Пользователи'
+        },
+        {
+          icon: 'casino',
+          route: 'games',
+          title: 'Игры'
+        },
+        {
+          icon: 'fingerprint',
+          route: 'change_password',
+          title: 'Сменить пароль'
+        },
+        {
+          icon: 'exit_to_app',
+          route: 'logout',
+          title: 'Выход'
+        }
+      ]
     }
   },
   methods: {
     close () {
-      this.drawer = false
+      // this.drawer = false
     }
   }
 }
