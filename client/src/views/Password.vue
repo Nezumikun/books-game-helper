@@ -1,9 +1,14 @@
 <template lang="pug">
   v-content
     v-container(fluid)
-      h1 Смена пароля пользователя {{ login }}
-      v-divider(class="mt-3")
-      v-subheader {{ description }}
+      v-layout(justify-center)
+        v-flex(xs12 sm10 md8 lg6)
+          v-card(ref="form")
+            v-toolbar(dark color="primary")
+              v-toolbar-title Смена пароля текущего пользователя
+            v-card-text
+              v-form
+              v-text-field(v-model="currentPassword" :rules="nameRules" label="Действующий пароль" required autofocus :append-icon="showCurrentPassword ? 'visibility' : 'visibility_off'" :type="showCurrentPassword ? 'text' : 'password'" @click:append="showCurrentPassword = !showCurrentPassword")
 </template>
 
 <script>
@@ -11,8 +16,8 @@ export default {
   name: 'password',
   data () {
     return {
-      login: this.$store.state.auth.user.login,
-      description: this.$store.state.auth.user.description
+      currentPassword: '',
+      showCurrentPassword: false
     }
   }
 }
