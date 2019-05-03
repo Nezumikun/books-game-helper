@@ -24,11 +24,6 @@ export default {
       console.log('show', data)
       this.$refs.alert.show(data)
     }
-  },
-  created () {
-    this.$nextTick(function () {
-      this.$refs.alert.show({ text: 'Test!' })
-    })
   }
 }
 </script>

@@ -20,7 +20,7 @@ const actions = {
   [AUTH_REQUEST]: ({ commit, dispatch }, user) => {
     return new Promise((resolve, reject) => {
       commit(AUTH_REQUEST)
-      apiCall('./login', 'get', {}, {
+      apiCall('./user/auth', 'get', {}, {
         headers: {
           Authorization: user.username + ':' + hash.sha256().update(user.password).digest('hex')
         }

@@ -25,9 +25,49 @@ var server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
+
+const mongoose = require('mongoose')
+mongoose.Promise = global.Promise
+mongoose.connect('mongodb+srv://book-games:book-games@cluster-nezumikun-mxn3v.mongodb.net/book-games?retryWrites=true', {
+  useNewUrlParser: true,
+  useCreateIndex: true
+})
+
+mongoose.connection
+  .once('open', function() {
+    debug('Mongoose connected')
+    const { User } = require('../models')
+    User.find({ login: 'root' }).exec((err, doc) => {
+      // debug(err, doc)
+      if (doc.length === 0) {
+        debug('Root not found')
+        let root = new User({
+          login: 'root',
+          passwordHash:  crypto.createHash('sha256')
+            .update('password')
+            .digest('hex'),
+          description: 'Верховный администратор',
+          canBeGameMaster: false,
+          canCreateUsers: true
+        })
+        root.save((err) => {
+          if (err) {
+            console.error(err)
+          } else {
+            debug('Root saved')
+            server.listen(port);
+          }
+        })
+      }
+      else {
+        debug('Root found')
+        server.listen(port);
+      }
+    })
+  })
+
 
 /**
  * Normalize a port into a number, string, or false.

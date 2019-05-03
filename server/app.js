@@ -12,6 +12,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use('/api', require('./routes/api'));
+let routes = require('./routes/api')
+for (let route in routes) {
+  app.use('/api/' + route, routes[route])
+}
+
 
 module.exports = app;
