@@ -28,6 +28,11 @@ const router = new Router({
       component: Logout
     },
     {
+      path: '/password',
+      name: 'password',
+      component: () => import(/* webpackChunkName: "user" */ './views/Password.vue')
+    },
+    {
       path: '/about',
       name: 'about',
       // route level code-splitting

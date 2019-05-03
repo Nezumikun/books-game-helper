@@ -52,7 +52,7 @@ export default {
         },
         {
           icon: 'fingerprint',
-          route: 'change_password',
+          route: 'password',
           title: 'Сменить пароль'
         },
         {
