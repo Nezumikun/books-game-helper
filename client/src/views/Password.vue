@@ -9,11 +9,36 @@
             v-card-text
               v-form(v-model="valid")
                 h3 Старый пароль
-                v-text-field(v-model="currentPassword" :rules="rulesCurrentPassword" label="Действующий пароль" required autofocus :append-icon="showCurrentPassword ? 'visibility' : 'visibility_off'" :type="showCurrentPassword ? 'text' : 'password'" @click:append="showCurrentPassword = !showCurrentPad")
+                v-text-field(
+                  v-model="currentPassword"
+                  :rules="rulesCurrentPassword"
+                  label="Действующий пароль"
+                  required
+                  autofocus
+                  :append-icon="showCurrentPassword ? 'visibility' : 'visibility_off'"
+                  :type="showCurrentPassword ? 'text' : 'password'"
+                  @click:append="showCurrentPassword = !showCurrentPad"
+                )
                 v-divider
                 h3(class="mt-3") Новый пароль
-                v-text-field(v-model="newPassword" :rules="rulesNewPassword" label="Новый пароль" required :append-icon="showNewPassword ? 'visibility' : 'visibility_off'" :type="showNewPassword ? 'text' : 'password'" @click:append="showNewPassword = !showNewPassword")
-                v-text-field(v-model="repeatPassword" :rules="rulesRepeatPassword" label="Повторный ввод нового пароля" required :append-icon="showRepeatPassword ? 'visibility' : 'visibility_off'" :type="showRepeatPassword ? 'text' : 'password'" @click:append="showRepeatPassword = !showRepeatPassword")
+                v-text-field(
+                  v-model="newPassword"
+                  :rules="rulesNewPassword"
+                  label="Новый пароль"
+                  required
+                  :append-icon="showNewPassword ? 'visibility' : 'visibility_off'"
+                  :type="showNewPassword ? 'text' : 'password'"
+                  @click:append="showNewPassword = !showNewPassword"
+                )
+                v-text-field(
+                  v-model="repeatPassword"
+                  :rules="rulesRepeatPassword"
+                  label="Повторный ввод нового пароля"
+                  required
+                  :append-icon="showRepeatPassword ? 'visibility' : 'visibility_off'"
+                  :type="showRepeatPassword ? 'text' : 'password'"
+                  @click:append="showRepeatPassword = !showRepeatPassword"
+                )
             v-card-actions
               v-spacer
               v-btn(color="success" depressed :disabled="!valid") Сменить
