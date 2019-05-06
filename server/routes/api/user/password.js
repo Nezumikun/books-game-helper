@@ -14,7 +14,7 @@ router.post('/', function(req, res, next) {
       token = jwt.decrypt(req.body.token)
     }
     catch (error) {
-      res.status(500).send(error)
+      res.status(error.name === 'TokenExpiredError' ? 401 : 500).send(error)
       res.end()
       return
     }
@@ -34,9 +34,22 @@ router.post('/', function(req, res, next) {
         res.end()
         return
       }
-      let retVal = {}
-      res.send(retVal)
-      res.end()
+      let user = doc[0]
+      user.updateOne({
+          $set: {
+            passwordHash: req.body.newPasswordHash
+          }
+        },
+        { },
+        (err, writeOpResult) => {
+          if (err) {
+            res.status(500).send(err)
+            res.end()
+            return
+          }
+          res.send({})
+          res.end()
+        })
     })
   }
   else {
