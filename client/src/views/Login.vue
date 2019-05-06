@@ -49,7 +49,6 @@ export default {
           this.$router.push('/')
         })
         .catch((err) => {
-          console.log(err)
           this.$emit('alert-show', {
             text: `Ошибка ${err.status}: ${err.data.message}!`,
             color: 'error'

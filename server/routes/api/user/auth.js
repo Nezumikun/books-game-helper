@@ -1,8 +1,7 @@
 const express = require('express')
 const router = express.Router()
 // const debug = require('debug')('server:api:user:auth')
-const secret = 'Tyger! Tyger! Birning bright!'
-const jwt = require('jsonwebtoken')
+const jwt = require('../../../tools/jwt')
 const _ = require('lodash')
 const { User } = require('../../../models')
 
@@ -30,7 +29,7 @@ router.get('/', function(req, res, next) {
         return
       }
       let retVal = {
-        token: jwt.sign({ id: doc[0]._id }, secret),
+        token: jwt.encrypt({ id: doc[0]._id }),
         user: doc[0].toObject()
       }
       delete retVal.user._id
