@@ -33,34 +33,37 @@
 export default {
   data () {
     return {
-      drawer: true,
-      menu_items: [
-        {
-          icon: 'home',
-          route: 'home',
-          title: 'Начало'
-        },
-        {
+      drawer: true
+    }
+  },
+  computed: {
+    menu_items: function () {
+      let menu = []
+      if (this.$store.state.auth.user.canCreateUsers) {
+        menu.push({
           icon: 'people',
           route: 'users',
           title: 'Пользователи'
-        },
-        {
+        })
+      }
+      if (this.$store.state.auth.user.canCreateGames) {
+        menu.push({
           icon: 'casino',
           route: 'games',
           title: 'Игры'
-        },
-        {
-          icon: 'fingerprint',
-          route: 'password',
-          title: 'Сменить пароль'
-        },
-        {
-          icon: 'exit_to_app',
-          route: 'logout',
-          title: 'Выход'
-        }
-      ]
+        })
+      }
+      menu.push({
+        icon: 'fingerprint',
+        route: 'password',
+        title: 'Сменить пароль'
+      })
+      menu.push({
+        icon: 'exit_to_app',
+        route: 'logout',
+        title: 'Выход'
+      })
+      return menu
     }
   },
   methods: {

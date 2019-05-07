@@ -39,6 +39,7 @@ mongoose.connection
   .once('open', function() {
     debug('Mongoose connected')
     const { User } = require('../models')
+    const crypto = require('crypto')
     User.find({ login: 'root' }).exec((err, doc) => {
       // debug(err, doc)
       if (doc.length === 0) {

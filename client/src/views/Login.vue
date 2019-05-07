@@ -46,7 +46,7 @@ export default {
             text: `Добро пожаловать, ${this.$store.state.auth.user.description}!`,
             color: 'success'
           })
-          this.$router.push('/')
+          this.$router.push(this.$store.state.auth.user.canCreateUsers ? '/users' : '/games')
         })
         .catch((err) => {
           this.$emit('alert-show', {

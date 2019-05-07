@@ -21,7 +21,6 @@ export default {
   },
   methods: {
     show: function (data) {
-      console.log('show', data)
       this.$refs.alert.show(data)
     }
   }

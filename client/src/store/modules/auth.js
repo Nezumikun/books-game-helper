@@ -5,7 +5,7 @@ import apiCall from '../../tools/api'
 const tokenNameInStorage = 'bgh-user-token'
 
 const state = {
-  token: localStorage.getItem(tokenNameInStorage) || '',
+  token: '',
   status: '',
   user: {},
   hasLoadedOnce: false
@@ -26,14 +26,14 @@ const actions = {
         }
       })
         .then(resp => {
-          localStorage.setItem(tokenNameInStorage, resp.data.token)
+          // localStorage.setItem(tokenNameInStorage, resp.data.token)
           commit(AUTH_SUCCESS, resp.data)
           // dispatch(USER_REQUEST)
           resolve(resp)
         })
         .catch(err => {
           commit(AUTH_ERROR, err)
-          localStorage.removeItem(tokenNameInStorage)
+          // localStorage.removeItem(tokenNameInStorage)
           reject(err.response)
         })
     })
