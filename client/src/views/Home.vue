@@ -15,6 +15,9 @@ export default {
   name: 'home',
   components: {
     HelloWorld
+  },
+  created () {
+    this.$router.push(this.$store.state.auth.user.canCreateUsers ? '/users' : '/games')
   }
 }
 </script>

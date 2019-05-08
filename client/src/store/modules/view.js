@@ -1,7 +1,7 @@
 import * as view from '../actions/view'
 
 const state = {
-  visibleLeftMenu: false,
+  visibleLeftMenu: true,
   visibleMainLoader: false
 }
 

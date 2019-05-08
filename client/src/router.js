@@ -4,6 +4,7 @@ import Home from './views/Home.vue'
 import Login from './views/Login.vue'
 import Logout from './views/Logout.vue'
 import store from './store'
+import * as auth from './store/actions/auth'
 
 Vue.use(Router)
 
@@ -49,6 +50,17 @@ router.beforeEach((to, from, next) => {
   } else {
     if (store.getters.isAuthenticated) {
       next()
+    } else if (store.getters.hasToken) {
+      store.dispatch(auth.AUTH_CHECK_TOKEN)
+        .then(() => {
+          next()
+        })
+        .catch(() => {
+          next({
+            path: '/login',
+            query: { redirect: to.fullPath }
+          })
+        })
     } else {
       next({
         path: '/login',
