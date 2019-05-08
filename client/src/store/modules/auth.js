@@ -1,4 +1,5 @@
 import { AUTH_REQUEST, AUTH_ERROR, AUTH_SUCCESS, AUTH_LOGOUT } from '../actions/auth'
+import * as view from '../actions/view'
 import hash from 'hash.js'
 import apiCall from '../../tools/api'
 
@@ -19,6 +20,8 @@ const getters = {
 const actions = {
   [AUTH_REQUEST]: ({ commit, dispatch }, user) => {
     return new Promise((resolve, reject) => {
+      dispatch(view.HIDE_LEFT_MENU)
+      dispatch(view.SHOW_MAIN_LOADER)
       commit(AUTH_REQUEST)
       apiCall('./user/auth', 'get', {}, {
         headers: {
@@ -27,6 +30,8 @@ const actions = {
       })
         .then(resp => {
           // localStorage.setItem(tokenNameInStorage, resp.data.token)
+          dispatch(view.SHOW_LEFT_MENU)
+          dispatch(view.HIDE_MAIN_LOADER)
           commit(AUTH_SUCCESS, resp.data)
           // dispatch(USER_REQUEST)
           resolve(resp)

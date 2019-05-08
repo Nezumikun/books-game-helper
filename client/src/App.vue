@@ -1,23 +1,22 @@
-<template>
-  <div id="app"
-  >
-    <v-app id="inspire">
-      <TopNavBar />
-      <router-view
+<template lang="pug">
+  div(id="app")
+    v-app(id="inspire")
+      TopNavBar
+      LeftMenu
+      router-view(
         @alert-show='show'
-      />
-      <Alert ref="alert"/>
-    </v-app>
-  </div>
+      )
+      Alert(ref="alert")
 </template>
 
 <script>
 import TopNavBar from '@/components/TopNavBar.vue'
+import LeftMenu from '@/components/LeftMenu.vue'
 import Alert from '@/components/Alert.vue'
 
 export default {
   components: {
-    TopNavBar, Alert
+    TopNavBar, LeftMenu, Alert
   },
   methods: {
     show: function (data) {

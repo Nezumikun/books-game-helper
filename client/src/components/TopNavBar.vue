@@ -1,75 +1,41 @@
-<template>
-  <div>
-    <v-navigation-drawer
-      v-model="drawer"
+<template lang="pug">
+  v-toolbar(
+    clipped-left
+    color="indigo"
+    dark
+    app
+    absolute
+    extended
+    extension-height="7"
+  )
+    v-toolbar-side-icon(
       v-if="this.$store.getters.isAuthenticated"
-      app
-      clipped
-      absolute
-      overflow
-    >
-      <v-list dense>
-        <v-list-tile v-for="item in menu_items" :key="item.route" @click="close" :to="'/' + item.route">
-          <v-list-tile-action>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-      </v-list>
-    </v-navigation-drawer>
-    <v-toolbar clipped-left color="indigo" dark app absolute>
-      <v-toolbar-side-icon
-        v-if="this.$store.getters.isAuthenticated"
-        @click.stop="drawer = !drawer"
-      ></v-toolbar-side-icon>
-      <v-toolbar-title>Книгоигры</v-toolbar-title>
-    </v-toolbar>
-  </div>
+      @click.stop="toggle"
+    )
+    v-toolbar-title Книгоигры
+    v-progress-linear(
+      slot="extension"
+      :indeterminate="true"
+      class="ma-0"
+      color="accent"
+      v-show="this.$store.getters.isMainLoaderVisible"
+    )
 </template>
 
 <script>
+import * as view from '../store/actions/view'
+
 export default {
-  data () {
-    return {
-      drawer: true
-    }
-  },
-  computed: {
-    menu_items: function () {
-      let menu = []
-      if (this.$store.state.auth.user.canCreateUsers) {
-        menu.push({
-          icon: 'people',
-          route: 'users',
-          title: 'Пользователи'
-        })
-      }
-      if (this.$store.state.auth.user.canCreateGames) {
-        menu.push({
-          icon: 'casino',
-          route: 'games',
-          title: 'Игры'
-        })
-      }
-      menu.push({
-        icon: 'fingerprint',
-        route: 'password',
-        title: 'Сменить пароль'
-      })
-      menu.push({
-        icon: 'exit_to_app',
-        route: 'logout',
-        title: 'Выход'
-      })
-      return menu
-    }
-  },
   methods: {
-    close () {
-      // this.drawer = false
+    toggle () {
+      this.$store.dispatch(this.$store.getters.isLeftMenuVisible ? view.HIDE_LEFT_MENU : view.SHOW_LEFT_MENU)
     }
   }
 }
 </script>
+
+<style>
+.v-toolbar__extension {
+  padding: 0 !important
+}
+</style>
