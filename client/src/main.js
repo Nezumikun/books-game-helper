@@ -19,7 +19,7 @@ new Vue({
   render: h => h(App)
 }).$mount('#app')
 
-const timeoutCheckToken = 15 * 1000
+const timeoutCheckToken = 60 * 1000
 
 function checkToken () {
   return new Promise((resolve, reject) => {
