@@ -119,6 +119,22 @@ export default {
       this.itemForDelete = item
       if (confirmed) {
         console.log(`delete item ${item._id}`)
+        this.loading = true
+        this.$store.dispatch(user.DELETE, { token: this.$store.state.auth.token, item })
+          .then(() => {
+            this.loading = false
+            this.$emit('alert-show', {
+              text: `Пользователь ${item.login} удалён`,
+              color: 'success'
+            })
+          })
+          .catch((err) => {
+            this.loading = false
+            this.$emit('alert-show', {
+              text: `Ошибка ${err.status}: ${err.data.message}!`,
+              color: 'error'
+            })
+          })
       } else {
         console.log(`confirm delete item ${item._id}`)
       }

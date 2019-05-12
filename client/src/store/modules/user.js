@@ -28,12 +28,33 @@ const actions = {
           reject(err.response)
         })
     })
+  },
+  [user.DELETE]: ({ commit, dispatch }, data) => {
+    return new Promise((resolve, reject) => {
+      apiCall('./user/' + data.item._id, 'delete', {}, {
+        headers: {
+          'X-Token': data.token
+        }
+      })
+        .then(resp => {
+          commit(user.DELETE, data.item)
+          resolve()
+        })
+        .catch(err => {
+          console.error(err)
+          reject(err.response)
+        })
+    })
   }
 }
 
 const mutations = {
   [user.GET_LIST]: (state, resp) => {
     state.userList = resp.data
+  },
+  [user.DELETE]: (state, item) => {
+    const index = state.userList.indexOf(item)
+    state.userList.splice(index, 1)
   }
 }
 
