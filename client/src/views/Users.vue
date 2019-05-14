@@ -19,11 +19,14 @@
             td {{ line.item.login }}
             td {{ line.item.description }}
             td(align="center")
-              v-icon(v-if="line.item.canCreateUsers" color="green" small) check_circle_outline
+              v-icon(v-if="line.item.canCreateUsers" color="success" small) check_circle_outline
+              v-icon(v-if="!line.item.canCreateUsers" color="error" small) highlight_off
             td(align="center")
-              v-icon(v-if="line.item.canCreateGames" color="green" small) check_circle_outline
+              v-icon(v-if="line.item.canCreateGames" color="success" small) check_circle_outline
+              v-icon(v-if="!line.item.canCreateGames" color="error" small) highlight_off
             td(align="center")
-              v-icon(v-if="line.item.canCreateGames" color="green" small) check_circle_outline
+              v-icon(v-if="line.item.canBeGameMaster" color="success" small) check_circle_outline
+              v-icon(v-if="!line.item.canBeGameMaster" color="error" small) highlight_off
             td {{ formatDateTime(line.item.createdAt) }}
             td {{ formatDateTime(line.item.updatedAt) }}
             td(align="center")
@@ -44,9 +47,24 @@
         v-card-text
           div Логин: {{ itemForDelete.login }}
           div Отписание: {{ itemForDelete.description }}
-          div(v-if="itemForDelete.canCreateUsers") Может создавать пользователей
-          div(v-if="itemForDelete.canCreateGames") Может создавать игры
-          div(v-if="itemForDelete.canBeGameMaster") Может быть мастером игры
+          div(v-if="itemForDelete.canCreateUsers")
+              v-icon(color="success" small class="mr-1") check_circle_outline
+              span Может создавать пользователей
+          div(v-if="!itemForDelete.canCreateUsers")
+              v-icon(color="error" small class="mr-1") highlight_off
+              span Не может создавать пользователей
+          div(v-if="itemForDelete.canCreateGames")
+              v-icon(color="success" small class="mr-1") check_circle_outline
+              span Может создавать игры
+          div(v-if="!itemForDelete.canCreateGames")
+              v-icon(color="error" small class="mr-1") highlight_off
+              span Не может создавать игры
+          div(v-if="itemForDelete.canBeGameMaster")
+              v-icon(color="success" small class="mr-1") check_circle_outline
+              span Может быть мастером игры
+          div(v-if="!itemForDelete.canBeGameMaster")
+              v-icon(color="error" small class="mr-1") highlight_off
+              span Не может быть мастером игры
         v-card-actions
           v-spacer
           v-btn(

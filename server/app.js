@@ -1,17 +1,18 @@
-var express = require('express');
-var path = require('path');
+var express = require('express')
+var path = require('path')
 const debug = require('debug')('server:app')
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+var cookieParser = require('cookie-parser')
+var logger = require('morgan')
 const nocache = require('nocache')
 
-var app = express();
+var app = express()
 
 app.use(nocache())
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(logger('dev'))
+app.use(express.json())
+app.use(express.urlencoded({ extended: false }))
+app.use(cookieParser())
+app.use(require('./middleware/userinfo')())
 
 let routes = require('./routes/api')
 for (let route in routes) {
@@ -20,4 +21,4 @@ for (let route in routes) {
 }
 
 
-module.exports = app;
+module.exports = app
