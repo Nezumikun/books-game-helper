@@ -1,4 +1,4 @@
-import { AUTH_REQUEST, AUTH_ERROR, AUTH_SUCCESS, AUTH_LOGOUT, AUTH_CHECK_TOKEN } from '../actions/auth'
+import * as auth from '../actions/auth'
 import * as view from '../actions/view'
 import hash from 'hash.js'
 import apiCall from '../../tools/api'
@@ -13,17 +13,22 @@ const state = {
 }
 
 const getters = {
-  isAuthenticated: state => !!state.token && !!state.user.login,
+  isAuthenticated: state => {
+    return !!state.token && !!state.user.login
+  },
   hasToken: state => !!state.token,
-  authStatus: state => state.status
+  authStatus: state => state.status,
+  mustResetPassword: state => {
+    return !!state.token && !!state.user.mustResetPassword
+  }
 }
 
 const actions = {
-  [AUTH_REQUEST]: ({ commit, dispatch }, user) => {
+  [auth.AUTH_REQUEST]: ({ commit, dispatch }, user) => {
     return new Promise((resolve, reject) => {
       dispatch(view.HIDE_LEFT_MENU)
       dispatch(view.SHOW_MAIN_LOADER)
-      commit(AUTH_REQUEST)
+      commit(auth.AUTH_REQUEST)
       apiCall('./user/auth', 'get', {}, {
         headers: {
           Authorization: user.username + ':' + hash.sha256().update(user.password).digest('hex')
@@ -33,25 +38,25 @@ const actions = {
           localStorage.setItem(tokenNameInStorage, resp.data.token)
           dispatch(view.SHOW_LEFT_MENU)
           dispatch(view.HIDE_MAIN_LOADER)
-          commit(AUTH_SUCCESS, resp.data)
+          commit(auth.AUTH_SUCCESS, resp.data)
           // dispatch(USER_REQUEST)
           resolve(resp)
         })
         .catch(err => {
-          commit(AUTH_ERROR, err)
+          commit(auth.AUTH_ERROR, err)
           localStorage.removeItem(tokenNameInStorage)
           reject(err.response)
         })
     })
   },
-  [AUTH_CHECK_TOKEN]: ({ commit, dispatch }, user) => {
+  [auth.AUTH_CHECK_TOKEN]: ({ commit, dispatch }, user) => {
     return new Promise((resolve, reject) => {
       let token = localStorage.getItem(tokenNameInStorage)
       if (!token) {
         reject(new Error('Отсутствует токен авторизации'))
         return
       }
-      commit(AUTH_REQUEST)
+      commit(auth.AUTH_REQUEST)
       apiCall('./user/auth/token', 'get', {}, {
         headers: {
           'X-Token': token
@@ -59,20 +64,20 @@ const actions = {
       })
         .then(resp => {
           localStorage.setItem(tokenNameInStorage, resp.data.token)
-          commit(AUTH_SUCCESS, resp.data)
+          commit(auth.AUTH_SUCCESS, resp.data)
           // dispatch(USER_REQUEST)
           resolve(resp)
         })
         .catch(err => {
-          commit(AUTH_ERROR, err)
+          commit(auth.AUTH_ERROR, err)
           localStorage.removeItem(tokenNameInStorage)
           reject(err.response)
         })
     })
   },
-  [AUTH_LOGOUT]: ({ commit, dispatch }) => {
+  [auth.AUTH_LOGOUT]: ({ commit, dispatch }) => {
     return new Promise((resolve, reject) => {
-      commit(AUTH_LOGOUT)
+      commit(auth.AUTH_LOGOUT)
       localStorage.removeItem(tokenNameInStorage)
       resolve()
     })
@@ -80,20 +85,20 @@ const actions = {
 }
 
 const mutations = {
-  [AUTH_REQUEST]: (state) => {
+  [auth.AUTH_REQUEST]: (state) => {
     state.status = 'loading'
   },
-  [AUTH_SUCCESS]: (state, resp) => {
+  [auth.AUTH_SUCCESS]: (state, resp) => {
     state.status = 'success'
     state.token = resp.token
     state.user = resp.user
     state.hasLoadedOnce = true
   },
-  [AUTH_ERROR]: (state) => {
+  [auth.AUTH_ERROR]: (state) => {
     state.status = 'error'
     state.hasLoadedOnce = true
   },
-  [AUTH_LOGOUT]: (state) => {
+  [auth.AUTH_LOGOUT]: (state) => {
     state.token = ''
     state.user = {}
   }

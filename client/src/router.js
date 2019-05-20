@@ -46,11 +46,23 @@ router.beforeEach((to, from, next) => {
     next()
   } else {
     if (store.getters.isAuthenticated) {
-      next()
+      if (store.getters.mustResetPassword && ((to.path !== '/password'))) {
+        next({
+          path: '/password'
+        })
+      } else {
+        next()
+      }
     } else if (store.getters.hasToken) {
       store.dispatch(auth.AUTH_CHECK_TOKEN)
         .then(() => {
-          next()
+          if (store.getters.mustResetPassword && ((to.path !== '/password'))) {
+            next({
+              path: '/password'
+            })
+          } else {
+            next()
+          }
         })
         .catch(() => {
           next({

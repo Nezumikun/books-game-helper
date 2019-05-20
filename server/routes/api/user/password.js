@@ -37,7 +37,8 @@ router.post('/', function(req, res, next) {
       let user = doc[0]
       user.updateOne({
           $set: {
-            passwordHash: req.body.newPasswordHash
+            passwordHash: req.body.newPasswordHash,
+            mustResetPassword: false
           }
         },
         { },

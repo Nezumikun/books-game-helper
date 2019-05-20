@@ -29,6 +29,11 @@ const schema = new mongoose.Schema({
     type: Boolean,
     required: true,
     default: true
+  },
+  mustResetPassword: {
+    type: Boolean,
+    required: true,
+    default: true
   }
 }, {
   autoCreate: true,
