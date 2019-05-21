@@ -8,7 +8,7 @@ const ObjectId = require('mongoose').Types.ObjectId;
 
 router.get('/', function(req, res, next) {
   if (req.userinfo === null) {
-    res.sendStatus(500).send(new Error('Отсутствуют заголовок с данными авторизации'))
+    res.sendStatus(500).send({ message: 'Отсутствуют заголовок с данными авторизации' })
     res.end()
     return
   }
@@ -24,6 +24,28 @@ router.get('/', function(req, res, next) {
       data: doc
     }
     res.send(retVal)
+    res.end()
+  })
+})
+
+router.delete('/:id', function(req, res, next) {
+  if (req.userinfo === null) {
+    res.status(500).send({ message: 'Отсутствуют заголовок с данными авторизации' })
+    res.end()
+    return
+  }
+  if (''+req.userinfo['_id'] === req.params.id) {
+    res.status(500).send({ message: 'Нельзя удалить самого себя'})
+    res.end()
+    return
+  }
+  User.findByIdAndDelete(new ObjectId(req.params.id), (err) => {
+    if (err) {
+      res.status(500).send(err)
+      res.end()
+      return
+    }
+    res.send({})
     res.end()
   })
 })
