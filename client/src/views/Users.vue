@@ -4,6 +4,7 @@
       v-toolbar(flat color="white")
         v-toolbar-title Пользователи
         v-spacer
+        ModalUserEdit
       v-divider
       v-data-table(
         :headers="headers"
@@ -82,7 +83,7 @@
 <script>
 import * as user from '../store/actions/user'
 import * as moment from 'moment-timezone'
-// moment.tz.setDefault("Europe/Moscow")
+import ModalUserEdit from '@/components/ModalUserEdit.vue'
 
 export default {
   data () {
@@ -157,6 +158,9 @@ export default {
         console.log(`confirm delete item ${item._id}`)
       }
     }
+  },
+  components: {
+    ModalUserEdit
   }
 }
 </script>
