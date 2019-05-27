@@ -43,6 +43,7 @@ const actions = {
           resolve(resp)
         })
         .catch(err => {
+          dispatch(view.HIDE_MAIN_LOADER)
           commit(auth.AUTH_ERROR, err)
           localStorage.removeItem(tokenNameInStorage)
           reject(err.response)
