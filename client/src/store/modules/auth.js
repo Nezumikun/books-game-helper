@@ -27,7 +27,6 @@ const actions = {
   [auth.AUTH_REQUEST]: ({ commit, dispatch }, user) => {
     return new Promise((resolve, reject) => {
       dispatch(view.HIDE_LEFT_MENU)
-      dispatch(view.SHOW_MAIN_LOADER)
       commit(auth.AUTH_REQUEST)
       apiCall('./user/auth', 'get', {}, {
         headers: {
@@ -37,13 +36,11 @@ const actions = {
         .then(resp => {
           localStorage.setItem(tokenNameInStorage, resp.data.token)
           dispatch(view.SHOW_LEFT_MENU)
-          dispatch(view.HIDE_MAIN_LOADER)
           commit(auth.AUTH_SUCCESS, resp.data)
           // dispatch(USER_REQUEST)
           resolve(resp)
         })
         .catch(err => {
-          dispatch(view.HIDE_MAIN_LOADER)
           commit(auth.AUTH_ERROR, err)
           localStorage.removeItem(tokenNameInStorage)
           reject(err.response)

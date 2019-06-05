@@ -14,7 +14,7 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn type="submit" color="primary">Войти</v-btn>
+                <v-btn type="submit" color="primary" :loading="loading" :disabled="loading">Войти</v-btn>
               </v-card-actions>
             </v-card>
           </v-form>
@@ -31,7 +31,8 @@ export default {
   data () {
     return {
       username: '',
-      password: ''
+      password: '',
+      loading: false
     }
   },
   name: 'login',
@@ -40,6 +41,7 @@ export default {
       if ((this.username === '') || (this.password === '')) {
         return false
       }
+      this.loading = true
       this.$store.dispatch(AUTH_REQUEST, { username: this.username, password: this.password })
         .then(() => {
           this.$emit('alert-show', {
@@ -53,6 +55,9 @@ export default {
             text: `Ошибка ${err.status}: ${err.data.message}!`,
             color: 'error'
           })
+        })
+        .then(() => {
+          this.loading = false
         })
       return false
     }
