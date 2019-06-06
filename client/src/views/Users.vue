@@ -71,12 +71,17 @@
           v-btn(
             color="error"
             flat
+            outline
             @click="deleteDialog = false"
+            :disabled="deleteLoading"
           ) Нет
           v-btn(
             color="success"
             flat
+            outline
             @click="deleteItem(itemForDelete, true)"
+            :loading="deleteLoading"
+            :disabled="deleteLoading"
           ) Да
 </template>
 
@@ -103,6 +108,7 @@ export default {
       },
       loading: false,
       deleteDialog: false,
+      deleteLoading: false,
       itemForDelete: {}
     }
   },
@@ -110,18 +116,19 @@ export default {
     this.loading = true
     this.$store.dispatch(user.GET_LIST, { token: this.$store.state.auth.token })
       .then(() => {
-        this.loading = false
         this.$emit('alert-show', {
           text: `Список загружен!`,
           color: 'success'
         })
       })
       .catch((err) => {
-        this.loading = false
         this.$emit('alert-show', {
           text: `Ошибка ${err.status}: ${err.data.message}!`,
           color: 'error'
         })
+      })
+      .then(() => {
+        this.loading = false
       })
   },
   computed: {
@@ -134,28 +141,30 @@ export default {
       return moment(dt).tz('Europe/Moscow').format('DD.MM.YYYY HH:mm:ss')
     },
     deleteItem (item, confirmed = false) {
-      this.deleteDialog = !confirmed
       this.itemForDelete = item
       if (confirmed) {
         console.log(`delete item ${item._id}`)
-        this.loading = true
+        this.deleteLoading = true
         this.$store.dispatch(user.DELETE, { token: this.$store.state.auth.token, item })
           .then(() => {
-            this.loading = false
             this.$emit('alert-show', {
               text: `Пользователь ${item.login} удалён`,
               color: 'success'
             })
           })
           .catch((err) => {
-            this.loading = false
             this.$emit('alert-show', {
               text: `Ошибка ${err.status}: ${err.data.message}!`,
               color: 'error'
             })
           })
+          .then(() => {
+            this.deleteLoading = false
+            this.deleteDialog = false
+          })
       } else {
         console.log(`confirm delete item ${item._id}`)
+        this.deleteDialog = true
       }
     }
   },
