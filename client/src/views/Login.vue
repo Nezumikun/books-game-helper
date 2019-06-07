@@ -52,7 +52,7 @@ export default {
         })
         .catch((err) => {
           this.$emit('alert-show', {
-            text: `Ошибка ${err.status}: ${err.data.message}!`,
+            text: (err.response) ? `Ошибка ${err.response.status}: ${err.response.data.message}!` : `${err}`,
             color: 'error'
           })
         })
