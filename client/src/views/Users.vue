@@ -4,7 +4,39 @@
       v-toolbar(flat color="white")
         v-toolbar-title Пользователи
         v-spacer
-        ModalUserEdit
+        v-dialog(v-model="editDialog" max-width="500px")
+          template(v-slot:activator="{ on }")
+            v-btn(color="primary" dark class="mb-2" v-on="on") Создать пользователя
+          v-card
+            v-toolbar(dark color="primary")
+              v-toolbar-title {{ saveFormTitle }}
+            v-card-text
+              v-container(grid-list-md)
+                v-layout(wrap)
+                  v-flex(xs12 sm6 md6)
+                    v-text-field(v-model="editedItem.login" label="Логин")
+                  v-flex(xs12 sm6 md6 v-if="!!editedItem.password")
+                    v-text-field(v-model="editedItem.password" label="Пароль")
+                  v-flex(xs12 sm12 md12)
+                    v-text-field(v-model="editedItem.description" label="Описание")
+                  v-checkbox(v-model="editedItem.canCreateUsers" label="Может создавать пользователей")
+                  v-checkbox(v-model="editedItem.canCreateGames" label="Может создавать игры")
+                  v-checkbox(v-model="editedItem.canBeGameMaster" label="Может быть мастером игры")
+            v-card-actions
+              v-spacer
+              v-btn(
+                color="error"
+                flat outline
+                @click="closeSaveDialog"
+                :disabled="saveLoading"
+              ) Отмена
+              v-btn(
+                color="success"
+                flat outline
+                @click="save"
+                :loading="saveLoading"
+                :disabled="saveLoading"
+              ) Сохранить
       v-divider
       v-data-table(
         :headers="headers"
@@ -32,7 +64,7 @@
             td {{ formatDateTime(line.item.updatedAt) }}
             td(align="center")
               div
-                v-icon(class="mr-2" small) edit
+                v-icon(class="mr-2" small @click="editItem(line.item)") edit
                 v-icon(small @click="deleteItem(line.item)") delete
         template(v-slot:no-data)
           div
@@ -88,7 +120,15 @@
 <script>
 import * as user from '../store/actions/user'
 import * as moment from 'moment-timezone'
-import ModalUserEdit from '@/components/ModalUserEdit.vue'
+
+const emptyItem = {
+  login: '',
+  password: '',
+  description: '',
+  canCreateUsers: false,
+  canCreateGames: false,
+  canBeGameMaster: false
+}
 
 export default {
   data () {
@@ -109,7 +149,10 @@ export default {
       loading: false,
       deleteDialog: false,
       deleteLoading: false,
-      itemForDelete: {}
+      itemForDelete: {},
+      editedItem: { ...emptyItem },
+      saveLoading: false,
+      editDialog: false
     }
   },
   created () {
@@ -134,6 +177,9 @@ export default {
   computed: {
     users () {
       return this.$store.getters.allUsers
+    },
+    saveFormTitle () {
+      return (this.editedItem._id) ? `Изменить ${this.editedItem.username}` : 'Новый пользователь'
     }
   },
   methods: {
@@ -154,7 +200,7 @@ export default {
           })
           .catch((err) => {
             this.$emit('alert-show', {
-              text: `Ошибка ${err.status}: ${err.data.message}!`,
+              text: `Ошибка ${err.response.status}: ${err.response.data.message}!`,
               color: 'error'
             })
           })
@@ -166,10 +212,45 @@ export default {
         console.log(`confirm delete item ${item._id}`)
         this.deleteDialog = true
       }
+    },
+    editItem (item, confirmed = false) {
+      this.editedItem = { ...item }
+      if (confirmed) {
+        this.save()
+      } else {
+        this.editDialog = true
+      }
+    },
+    save () {
+      this.saveLoading = true
+      this.$store.dispatch(user.SAVE, {
+        token: this.$store.state.auth.token,
+        item: { ...this.editedItem }
+      })
+        .then(() => {
+          this.$emit('alert-show', {
+            text: `Пользователь записан!`,
+            color: 'success'
+          })
+          this.editDialog = false
+        })
+        .catch((err) => {
+          this.$emit('alert-show', {
+            text: (err.response) ? `Ошибка ${err.response.status}: ${err.response.data.message}!` : `Ошибка: ${err}`,
+            color: 'error'
+          })
+        })
+        .then(() => {
+          this.saveLoading = false
+          this.editedItem = { ...emptyItem }
+        })
+    },
+    closeSaveDialog () {
+      this.editDialog = false
+      this.editedItem = { ...emptyItem }
     }
   },
   components: {
-    ModalUserEdit
   }
 }
 </script>
