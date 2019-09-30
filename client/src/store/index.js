@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import auth from './modules/auth'
 import view from './modules/view'
 import user from './modules/user'
+import game from './modules/game'
 
 Vue.use(Vuex)
 
@@ -12,7 +13,8 @@ export default new Vuex.Store({
   modules: {
     auth,
     view,
-    user
+    user,
+    game
   },
   strict: debug
 })

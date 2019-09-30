@@ -17,6 +17,7 @@ router.get('/', function(req, res, next) {
   Game
     .find(query)
     .populate('creator', 'login _id')
+    .populate('allowAccess', 'login _id')
     .exec((err, doc) => {
     if (err) {
       res.status(500).send(err)
